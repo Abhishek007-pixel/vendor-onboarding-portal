@@ -33,8 +33,6 @@ Open http://localhost:5173 — ensure the backend is running on port 8000.
 - `PATCH /vendors/{id}/approve` — approve a vendor
 - UI: form validation, category filters, approve action
 
-See `plan/plan.md` for the full checklist.
-
 ---
 
 ## Prompts used
@@ -59,7 +57,7 @@ format.
 
 ### 2. Implementation
 
-What we used to implement against `plan.md` and the problem PDF (git and README were added afterward, not in this prompt). In this repo the same plan is at [`plan/plan.md`](plan/plan.md).
+What we used to implement against a local `plan.md` and problem-statement PDF (git and README were added afterward, not in this prompt). Those files are not part of this repository.
 
 ```
 Read plan.md and the problem statement PDF in plan/. Scaffold FastAPI: POST /vendors,
