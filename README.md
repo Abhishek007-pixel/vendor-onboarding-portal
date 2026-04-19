@@ -26,6 +26,41 @@ npm run dev
 
 Open http://localhost:5173 — ensure the backend is running on port 8000.
 
+## Testing
+
+### Automated (pytest)
+
+From the `backend` folder (with dependencies installed):
+
+```bash
+cd backend
+pip install -r requirements.txt
+python -m pytest tests -v
+```
+
+These exercise the same routes as the interactive docs: empty list, create vendor with **Pending Approval**, approve, 404 for bad id, and a check that `/openapi.json` exposes the API (what Swagger UI uses).
+
+### Manual — Swagger UI
+
+1. Start the backend (`uvicorn main:app --reload --port 8000`).
+2. Open **http://localhost:8000/docs** — you’ll see **Swagger UI** with `POST /vendors`, `GET /vendors`, and `PATCH /vendors/{vendor_id}/approve`.
+3. Use **Try it out** on each endpoint: create a vendor, **Execute**, then **GET** to list, then **PATCH** … `/approve` with that vendor’s `id`.
+
+Alternative OpenAPI viewers: **http://localhost:8000/redoc** (ReDoc).
+
+### Frontend + API together
+
+With backend on port **8000** and `npm run dev` on **5173**, use the form and table in the browser; the UI talks to the same API you exercise in Swagger.
+
+## UI layout (what you’ll see)
+
+![UI preview](docs/ui-preview.png)
+
+- **Title:** “Vendor Onboarding Portal” at the top.
+- **Register New Vendor:** Light gray card (`#f9f9f9`) with fields **Name**, **Category** (dropdown: Staffing Agency, Freelance Platform, Consultant), **Contact Email**, red validation messages if needed, and an indigo **Register Vendor** button (`#4f46e5`).
+- **Filters:** Pill buttons — **All** plus the three categories; active filter is indigo, others gray.
+- **Table:** Columns **Name**, **Category**, **Email**, **Status**, **Action**. Status is a pill: yellow/cream (`#fef9c3` / `#78350f`) for **Pending Approval**, green (`#d1fae5` / `#065f46`) for **Approved**. **Approve** (green button) appears only while status is not Approved.
+
 ## Features
 
 - `POST /vendors` — register a vendor (default status: Pending Approval)

@@ -15,6 +15,11 @@ app.add_middleware(
 vendors: list[dict] = []
 
 
+def reset_vendors() -> None:
+    """Clear in-memory store (used by tests)."""
+    vendors.clear()
+
+
 class VendorIn(BaseModel):
     name: str
     category: str
