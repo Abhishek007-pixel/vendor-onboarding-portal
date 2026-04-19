@@ -1,4 +1,6 @@
-from fastapi import FastAPI, HTTPException
+from typing import Annotated
+
+from fastapi import FastAPI, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from uuid import uuid4
@@ -45,7 +47,19 @@ def get_vendors():
 
 
 @app.patch("/vendors/{vendor_id}/approve")
-def approve_vendor(vendor_id: str):
+def approve_vendor(
+    vendor_id: Annotated[
+        str,
+        Path(
+            description=(
+                "Vendor id from POST /vendors or GET /vendors (the `id` field). "
+                "Copy-paste it here—do not leave this empty."
+            ),
+            min_length=1,
+            examples=["550e8400-e29b-41d4-a716-446655440000"],
+        ),
+    ],
+):
     for v in vendors:
         if v["id"] == vendor_id:
             v["status"] = "Approved"

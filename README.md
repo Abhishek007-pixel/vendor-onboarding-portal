@@ -14,7 +14,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-Open http://localhost:8000/docs for the API.
+Open **http://localhost:8000/docs** (Swagger UI) and test the API there first — see [Testing](#testing).
 
 **Frontend** (terminal 2):
 
@@ -28,9 +28,41 @@ Open http://localhost:5173 — ensure the backend is running on port 8000.
 
 ## Testing
 
-### Automated (pytest)
+**Start with Swagger UI** (interactive, no code): confirm the API before the React app or pytest.
 
-From the `backend` folder (with dependencies installed):
+### 1. FastAPI — Swagger UI (do this first)
+
+1. Start the backend (from `backend`):
+
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
+
+2. In the browser open **http://localhost:8000/docs** — FastAPI serves **Swagger UI** here (built from the OpenAPI schema).
+
+3. **POST `/vendors`** — click it → **Try it out** → body example:
+
+   ```json
+   {
+     "name": "Test Vendor",
+     "category": "Staffing Agency",
+     "contact_email": "test@example.com"
+   }
+   ```
+
+   **Execute**. Response should include `"status": "Pending Approval"` and an `id` (copy the `id`).
+
+4. **GET `/vendors`** — **Try it out** → **Execute**. You should see the vendor you created in the array.
+
+5. **PATCH `/vendors/{vendor_id}/approve`** — **Try it out** → paste the `id` from step 3 into `vendor_id` → **Execute**. Response should show `"status": "Approved"`.
+
+6. Optional: call **GET `/vendors`** again to confirm the row shows **Approved**.
+
+**Also available:** **http://localhost:8000/redoc** (ReDoc, same API, different layout).
+
+### 2. Automated tests (pytest)
+
+After Swagger looks good, you can run the suite from `backend`:
 
 ```bash
 cd backend
@@ -38,19 +70,11 @@ pip install -r requirements.txt
 python -m pytest tests -v
 ```
 
-These exercise the same routes as the interactive docs: empty list, create vendor with **Pending Approval**, approve, 404 for bad id, and a check that `/openapi.json` exposes the API (what Swagger UI uses).
+These hit the same routes as Swagger (empty list, create, approve, 404, OpenAPI schema).
 
-### Manual — Swagger UI
+### 3. Frontend + API together
 
-1. Start the backend (`uvicorn main:app --reload --port 8000`).
-2. Open **http://localhost:8000/docs** — you’ll see **Swagger UI** with `POST /vendors`, `GET /vendors`, and `PATCH /vendors/{vendor_id}/approve`.
-3. Use **Try it out** on each endpoint: create a vendor, **Execute**, then **GET** to list, then **PATCH** … `/approve` with that vendor’s `id`.
-
-Alternative OpenAPI viewers: **http://localhost:8000/redoc** (ReDoc).
-
-### Frontend + API together
-
-With backend on port **8000** and `npm run dev` on **5173**, use the form and table in the browser; the UI talks to the same API you exercise in Swagger.
+With backend on **8000** and `npm run dev` on **5173**, use the form and table; behavior should match what you saw in Swagger.
 
 ## UI layout (what you’ll see)
 
